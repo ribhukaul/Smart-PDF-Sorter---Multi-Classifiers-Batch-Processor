@@ -1,0 +1,218 @@
+#########################################################################
+""" This code is attempting to run the process1() method on multiple files parallelly 
+# """
+# class BatchDocumentExtractor:
+#     def __init__(self, directory_path):
+#         self.directory_path = directory_path
+
+#     def process_file(self, file_path):
+#         try:
+#             extractor = WamInsuranceRibhuExtractor(file_path)
+#             result = extractor.process1()
+#             if result:
+#                 # Convert TabellaCostiIngressoEUscita instance to dictionary if necessary
+#                 if isinstance(result['data'], TabellaCostiIngressoEUscita):
+#                     result['data'] = result['data'].dict()
+#                 result['filename'] = os.path.basename(file_path)
+#                 return result
+#             else:
+#                 return {'filename': os.path.basename(file_path), 'data': 'No data found'}
+#         except Exception as e:
+#             print(f"Error processing {file_path}: {e}")
+#             return {'filename': os.path.basename(file_path), 'error': str(e)}
+
+#     def run_extraction(self, max_workers=5):
+#         all_data = []
+#         with ThreadPoolExecutor(max_workers=max_workers) as executor:
+#             futures = [executor.submit(self.process_file, os.path.join(self.directory_path, filename))
+#                        for filename in os.listdir(self.directory_path) if filename.endswith('.pdf')]
+#             for future in as_completed(futures):
+#                 result = future.result()
+#                 print("Result:", result)  # Add this line to check the result
+#                 if result is not None:
+#                     all_data.append(result)
+
+
+#         # Process results to gather them in a list and format for Excel output
+#         final_data = []
+#         for data in all_data:
+#             if data and 'data' in data and isinstance(data['data'], dict):  # Ensure data['data'] is a dictionary
+#                 entry = {
+#                     'Filename': data['filename'],
+#                     'Commissione Gestione': data['data'].get('gestione_commissioni', {}).get('commissione_gestione', 'N/A'),
+#                     'Commissione Transazione': data['data'].get('gestione_commissioni', {}).get('commissione_transazione', 'N/A'),
+#                     'Commissione Performance': data['data'].get('gestione_commissioni', {}).get('commissione_performance', 'N/A'),
+#                     'Costi Ingresso': data['data'].get('costo_entrata_e_uscita', {}).get('costi_ingresso'),
+#                     'Costi Uscita': data['data'].get('costo_entrata_e_uscita', {}).get('costi_uscita'),
+#                     'Spese Correnti': data['data'].get('costo_entrata_e_uscita', {}).get('spese_correnti')
+
+#                 }
+#                 final_data.append(entry)
+
+#         if final_data:
+#             df = pd.DataFrame.from_records(final_data)  # Construct DataFrame from list of dictionaries
+#             excel_path = os.path.join(self.directory_path, 'Extraction_Results1.xlsx')
+#             df.to_excel(excel_path, index=False)
+#             print(f"Data saved to {excel_path}")
+
+
+# # Assuming the class is instantiated and a directory path is defined
+# directory_path = 'C:\\Users\\ribhu.kaul\\RibhuLLM\\Data\\MultipleExecTest'
+# batch_extractor = BatchDocumentExtractor(directory_path)
+# batch_extractor.run_extraction(max_workers=10)
+################################################ 
+# This code extracts info from pdf and saves as txt, xlsx and pdf. This really helped to understand the structure of the 
+# tables that the azure document intelligence reads
+# def extract_tables_from_pdf(file_path):
+#     extractor = WamInsuranceRibhuExtractor(file_path)
+#     tables = extractor.get_tables1()
+#     return tables
+
+# def save_tables_to_excel(tables, excel_file_path):
+#     with pd.ExcelWriter(excel_file_path, engine='xlsxwriter') as writer:
+#         for table_name, table_data in tables.items():
+#             table_data.to_excel(writer, sheet_name=table_name, index=False)
+
+# def load_and_convert_excel_to_pdf(excel_file_path, pdf_file_path):
+#     pdf = FPDF()
+#     pdf.add_page()
+#     # Removed deprecated 'uni' parameter
+#     pdf.add_font('DejaVu', '', 'C:/Users/ribhu.kaul/RibhuLLM/dde-llm-engine/dde-llm-engine/Fonts/DejaVuSansCondensed.ttf')
+#     pdf.set_font('DejaVu', '', 10)
+
+#     xls = pd.ExcelFile(excel_file_path)
+#     for sheet_name in xls.sheet_names:
+#         pdf.add_page()
+#         # Use Helvetica core font directly
+#         pdf.set_font('Helvetica', 'B', 16)
+#         # Updated deprecated method
+#         pdf.cell(200, 10, f"Table: {sheet_name}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+#         pdf.set_font('DejaVu', '', 12)
+
+#         df = pd.read_excel(xls, sheet_name=sheet_name)
+#         for i in df.index:
+#             for j in range(len(df.columns)):
+#                 pdf.cell(40, 10, str(df.iloc[i, j]), border=1)
+#             pdf.ln(10)
+#     pdf.output(pdf_file_path)
+#     print(f"PDF successfully created with tables at {pdf_file_path}")
+
+# def save_tables_to_text(tables, text_file_path):
+#     with open(text_file_path, 'w', encoding='utf-8') as f:
+#         for table_name, table_data in tables.items():
+#             f.write(f"{table_name} Extracted:\n{table_data.to_string(index=False)}\n\n")
+
+# def create_pdf_from_text(text_file_path, pdf_file_path):
+#     pdf = FPDF()
+#     pdf.add_page()
+#     # Removed deprecated 'uni' parameter
+#     pdf.add_font('DejaVu', '', 'C:/Users/ribhu.kaul/RibhuLLM/dde-llm-engine/dde-llm-engine/Fonts/DejaVuSansCondensed.ttf')
+#     pdf.set_font('DejaVu', '', 12)
+
+#     with open(text_file_path, 'r', encoding='utf-8') as file:
+#         lines = file.readlines()
+#         for line in lines:
+#             pdf.multi_cell(0, 10, text=line, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+
+#     pdf.output(pdf_file_path)
+#     print(f"PDF successfully created at {pdf_file_path}")
+
+# tables = extract_tables_from_pdf(file_path1)
+# save_tables_to_excel(tables, excel_file_path)
+# save_tables_to_text(tables, text_file_path)
+# create_pdf_from_text(text_file_path, pdf_file_path)
+# load_and_convert_excel_to_pdf(excel_file_path, pdf_excel_path)
+
+# # Ensure error handling for the extraction process
+# try:
+#     extractor_table = WamInsuranceRibhuExtractor(pdf_excel_path)
+#     extraction_test = extractor_table.process1()
+#     print(extraction_test)
+# except Exception as e:
+#     print(f"An error occurred: {e}")
+
+
+# extractor1 =  WamInsuranceRibhuExtractor(file_path1)
+# extraction1 = extractor1.process1()
+# print(extraction1)
+
+# # # Get tables directly
+# tables1 = extractor1.get_tables1()
+# print(tables1)
+
+
+##################################################################
+
+# This code serially processes each file from the directory through extraction process1() method and save the results 
+# to an excel, works pretty fine but is very time consuming, need to use parallel processing
+# def process_file(file_path):
+#     try:
+#         extractor = WamInsuranceRibhuExtractor(file_path)
+#         result = extractor.process1()  # Using your defined method for processing
+#         if result:
+#             result['filename'] = os.path.basename(file_path)  # Add filename to results
+#             return result
+#         return {'filename': os.path.basename(file_path), 'data': 'Processing Failed'}
+#     except Exception as e:
+#         print(f"Error processing {file_path}: {e}")
+#         return None
+
+# def run_extraction(directory_path):
+#     results = []
+
+#     #Process each PDF file
+#     for filename in os.listdir(directory_path):
+#         if filename.endswith('.pdf'):
+#             file_path = os.path.join(directory_path, filename)
+#             extraction_result = process_file(file_path)
+#             if extraction_result:
+#                 results.append(extraction_result)
+
+#     #Create a DataFrame from the results
+#     all_data = []
+#     for result in results:
+#         if result and 'data' in result:
+#             data = {
+#                 'Filename': result['filename'],
+#                 'Commissione Gestione': result['data'].get('gestione_commissioni', {}).get('commissione_gestione', 'N/A'),
+#                 'Commissione Transazione': result['data'].get('gestione_commissioni', {}).get('commissione_transazione', 'N/A'),
+#                 'Commissione Performance': result['data'].get('gestione_commissioni', {}).get('commissione_performance', 'N/A'),
+#                 'Costi Ingresso': result['data'].get('costi_ingresso_e_uscita', {}).get('costi_ingresso', 'N/A'),
+#                 'Costi Uscita': result['data'].get('costi_ingresso_e_uscita', {}).get('costi_uscita', 'N/A'),
+#                 'Spese Correnti': result['data'].get('costi_ingresso_e_uscita', {}).get('spese_correnti', 'N/A')
+#             }
+#             all_data.append(data)
+
+#     if all_data:
+#         df = pd.DataFrame(all_data)
+#         excel_path = os.path.join(directory_path, 'Extraction_Results1.xlsx')
+#         df.to_excel(excel_path, index=False)
+#         print(f"Data saved to {excel_path}")
+
+# #Specify the directory containing your PDF files
+# directory_path = 'C:\\Users\\ribhu.kaul\\RibhuLLM\\Data\\MultipleExecTest'
+
+# #Run the extraction process
+# run_extraction(directory_path)
+
+
+
+
+# ######################### Code to save the table as a txt file for better viewing, 
+# this works better than the next code
+# # Convert each DataFrame in tables1 to a string representation
+# tables_str = {key: value.to_string() for key, value in tables1.items()}
+
+# # Now, let's save this dictionary to a text file
+# # Specify the file path where you want to save the output
+# file_path2 = 'C:/Users/ribhu.kaul/RibhuLLM/Codes/tables_output.txt'
+
+# # Use a context manager to open the file and write the content
+# with open(file_path2, 'w', encoding='utf-8') as f:
+#     for table_name, table_content in tables_str.items():
+#         f.write(f"{table_name} Extracted for Ribhu:\n{table_content}\n\n")
+
+# print(f"Tables saved to {file_path2}")
+
+
+

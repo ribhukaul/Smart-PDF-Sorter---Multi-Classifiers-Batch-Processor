@@ -1,0 +1,295 @@
+{
+    "file_path": "tmp\\856053a5-1cbd-46cf-8349-0bb673256b9c.pdf",
+    "extraction_cost": {
+        "total": {
+            "tokens": 9800,
+            "cost": 0.18
+        },
+        "currency": "EUR",
+        "models": {
+            "gpt-4-turbo": {
+                "tokens": 5084,
+                "cost": 0.14
+            },
+            "gpt-3.5-turbo-16k": {
+                "tokens": 4716,
+                "cost": 0.02
+            },
+            "azure": {
+                "pages": 2,
+                "cost": 0.02
+            }
+        }
+    },
+    "sections": {
+        "section0": {
+            "name": "Informazioni di base",
+            "list": [
+                "cod_data",
+                "cod_isin",
+                "cod_rhp"
+            ]
+        },
+        "section1": {
+            "name": "Performance",
+            "list": [
+                "cod_rsfav_1y",
+                "cod_rsfav_rhp",
+                "cod_sri",
+                "cod_rsmod_1y",
+                "cod_rsmod_rhp",
+                "cod_smor_1y",
+                "cod_smor_rhp",
+                "cod_rssfav_1y",
+                "cod_rssfav_rhp",
+                "cod_rsstr_1y",
+                "cod_rsstr_rhp"
+            ]
+        },
+        "section2": {
+            "name": "Reduction In Yield",
+            "list": [
+                "cod_riy_1y",
+                "cod_riy_rhp"
+            ]
+        },
+        "section3": {
+            "name": "Costi e Commissioni",
+            "list": [
+                "cod_costi_ingresso",
+                "cod_costi_uscita",
+                "cod_commissioni_di_gestione",
+                "cod_costi_di_transazione",
+                "cod_commissioni_di_performance"
+            ]
+        },
+        "section4": {
+            "name": "Target Market",
+            "list": [
+                "cod_target_market"
+            ]
+        }
+    },
+    "extraction": {
+        "cod_data": {
+            "name": "Data",
+            "value": "2022-12-15",
+            "metric": "N/A",
+            "data_type": "Date",
+            "range": [],
+            "coord": {},
+            "decimals": "N/A",
+            "allownull": "false"
+        },
+        "cod_isin": {
+            "name": "ISIN",
+            "value": "-",
+            "metric": "CAPS",
+            "data_type": "String",
+            "range": [],
+            "coord": {},
+            "decimals": "N/A",
+            "allownull": "false"
+        },
+        "cod_rhp": {
+            "name": "RHP (anni)",
+            "value": "10",
+            "metric": "anni",
+            "data_type": "Integer",
+            "range": [],
+            "coord": {},
+            "decimals": "N/A",
+            "allownull": "false"
+        },
+        "cod_rsfav_1y": {
+            "name": "RSFAV 1Y %",
+            "value": "19.7",
+            "metric": "%",
+            "data_type": "Float",
+            "range": [],
+            "coord": {},
+            "decimals": 2,
+            "allownull": "false"
+        },
+        "cod_rsfav_rhp": {
+            "name": "RSFAV RHP %",
+            "value": "7.3",
+            "metric": "%",
+            "data_type": "Float",
+            "range": [],
+            "coord": {},
+            "decimals": 2,
+            "allownull": "false"
+        },
+        "cod_sri": {
+            "name": "SRI",
+            "value": "3",
+            "metric": "anni",
+            "data_type": "Integer",
+            "range": [],
+            "coord": {},
+            "decimals": "N/A",
+            "allownull": "false"
+        },
+        "cod_rsmod_1y": {
+            "name": "RSMOD 1Y %",
+            "value": "2.7",
+            "metric": "%",
+            "data_type": "Float",
+            "range": [],
+            "coord": {},
+            "decimals": 2,
+            "allownull": "false"
+        },
+        "cod_rsmod_rhp": {
+            "name": "RSMOD RHP %",
+            "value": "6.3",
+            "metric": "%",
+            "data_type": "Float",
+            "range": [],
+            "coord": {},
+            "decimals": 2,
+            "allownull": "false"
+        },
+        "cod_smor_1y": {
+            "name": "SMOR 1Y (€)",
+            "value": "10780",
+            "metric": "€",
+            "data_type": "Float",
+            "range": [],
+            "coord": {},
+            "decimals": 2,
+            "allownull": "false"
+        },
+        "cod_smor_rhp": {
+            "name": "SMOR RHP (€)",
+            "value": "19340",
+            "metric": "€",
+            "data_type": "Float",
+            "range": [],
+            "coord": {},
+            "decimals": 2,
+            "allownull": "false"
+        },
+        "cod_rssfav_1y": {
+            "name": "RSSFAV 1Y %",
+            "value": "-16.5",
+            "metric": "%",
+            "data_type": "Float",
+            "range": [],
+            "coord": {},
+            "decimals": 2,
+            "allownull": "false"
+        },
+        "cod_rssfav_rhp": {
+            "name": "RSSFAV RHP %",
+            "value": "-0.6",
+            "metric": "%",
+            "data_type": "Float",
+            "range": [],
+            "coord": {},
+            "decimals": 2,
+            "allownull": "false"
+        },
+        "cod_rsstr_1y": {
+            "name": "RSSTR 1Y %",
+            "value": "-38.5",
+            "metric": "%",
+            "data_type": "Float",
+            "range": [],
+            "coord": {},
+            "decimals": 2,
+            "allownull": "false"
+        },
+        "cod_rsstr_rhp": {
+            "name": "RSSTR RHP %",
+            "value": "-4.1",
+            "metric": "%",
+            "data_type": "Float",
+            "range": [],
+            "coord": {},
+            "decimals": 2,
+            "allownull": "false"
+        },
+        "cod_riy_1y": {
+            "name": "RIY 1Y %",
+            "value": "5.2",
+            "metric": "%",
+            "data_type": "Float",
+            "range": [],
+            "coord": {},
+            "decimals": 2,
+            "allownull": "true"
+        },
+        "cod_riy_rhp": {
+            "name": "RIY RHP %",
+            "value": "2.5",
+            "metric": "%",
+            "data_type": "Float",
+            "range": [],
+            "coord": {},
+            "decimals": 2,
+            "allownull": "false"
+        },
+        "cod_costi_ingresso": {
+            "name": "Costi ingresso",
+            "value": "3.00",
+            "metric": "%",
+            "data_type": "Float",
+            "range": [],
+            "coord": {},
+            "decimals": 2,
+            "allownull": "true"
+        },
+        "cod_costi_uscita": {
+            "name": "Costi uscita",
+            "value": "-",
+            "metric": "%",
+            "data_type": "Float",
+            "range": [],
+            "coord": {},
+            "decimals": 2,
+            "allownull": "true"
+        },
+        "cod_commissioni_di_gestione": {
+            "name": "Commissioni di gestione",
+            "value": "2.2",
+            "metric": "%",
+            "data_type": "Float",
+            "range": [],
+            "coord": {},
+            "decimals": 2,
+            "allownull": "false"
+        },
+        "cod_costi_di_transazione": {
+            "name": "Costi di transazione",
+            "value": "0.00",
+            "metric": "%",
+            "data_type": "Float",
+            "range": [],
+            "coord": {},
+            "decimals": 2,
+            "allownull": "false"
+        },
+        "cod_commissioni_di_performance": {
+            "name": "Commissioni di performance",
+            "value": "0.0",
+            "metric": "%",
+            "data_type": "Float",
+            "range": [],
+            "coord": {},
+            "decimals": 2,
+            "allownull": "true"
+        },
+        "cod_target_market": {
+            "name": "Target Market",
+            "value": "INVESTITORI AL DETTAGLIO CUI SI INTENDE COMMERCIALIZZARE IL PRODOTTO PersonalWay è un prodotto di investimento assicurativo a premio unico e a vita intera che prevede diverse opzioni di investimento, con lobiettivo di offrire delle prestazioni periodiche ricorrenti grazie alla liquidazione programmata del capitale a favore del Contraente (percentuale del premio versato). È prevista una soglia di ingresso di almeno € 50.000 o suoi multipli.\nIl fondo interno AllianzGI Personal Strategy 30 è rivolto a coloro che ricercano rendimenti medio/alti e che prevedono di tenere linvestimento per almeno 10 anni. È destinato a investitori con una propensione al rischio medio/bassa, una moderata capacità di sostenere eventuali perdite e una conoscenza ed esperienza finanziaria adeguata (corrispondente a un livello intermedio in una scala di tre livelli).",
+            "metric": "N/A",
+            "data_type": "String",
+            "range": [],
+            "coord": {},
+            "decimals": "N/A",
+            "allownull": "false"
+        }
+    }
+}

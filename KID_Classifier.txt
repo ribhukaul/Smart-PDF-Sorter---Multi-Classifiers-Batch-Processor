@@ -1,0 +1,284 @@
+
+----> folder_classification.py
+
+# The code below serially performs classification (using KidClassifierCorrected2 model in Document Intelligence) on 
+# the files given in a folder one by one and seperates each file based on the doument classification inside that file (KID or KIID)
+# and goes on to store the seperated files in KID or KIID folders.
+
+import os
+from PyPDF2 import PdfReader, PdfWriter
+from azure.core.credentials import AzureKeyCredential
+from azure.ai.documentintelligence import DocumentIntelligenceClient
+from azure.core.exceptions import ResourceNotFoundError
+from AWSInteraction.EnvVarSetter import EnvVarSetter
+
+# Setting up environment variables
+env_setter = EnvVarSetter()
+env_setter.configure_local_env_vars()
+
+class Classifier:
+    def __init__(self, classifier_id, original_pdf_path):
+        self.classifier_id = classifier_id
+        self.original_pdf_path = original_pdf_path
+        self.endpoint = os.environ.get("AZURE_FORM_RECOGNIZER_ENPOINT")
+        self.key = os.environ.get("AZURE_FORM_RECOGNIZER_KEY")
+
+    def classify_and_extract_documents(self):
+        credential = AzureKeyCredential(self.key)
+        client = DocumentIntelligenceClient(endpoint=self.endpoint, credential=credential, api_version='2024-02-29-preview')
+        try:
+            with open(self.original_pdf_path, "rb") as pdf_file:
+                poller = client.begin_classify_document(
+                    classifier_id=self.classifier_id,
+                    classify_request=pdf_file,
+                    split="auto",
+                    content_type="application/octet-stream"
+                )
+                result = poller.result()
+                return result
+        except ResourceNotFoundError as e:
+            print("Model not found. Check the model ID and endpoint.")
+            print(e.message)
+        except Exception as e:
+            print("An error occurred during document classification.")
+            print(e)
+
+    def save_document_pages(self, pages, save_path):
+        reader = PdfReader(self.original_pdf_path)
+        writer = PdfWriter()
+        for page_number in pages:
+            writer.add_page(reader.pages[page_number])
+        with open(save_path, 'wb') as f:
+            writer.write(f)
+        print(f"Saved document to {save_path}")
+
+    def process_documents(self, classification_result):
+        base_path = r'C:\Users\ribhu.kaul\RibhuLLM\KID_Classifier\Separated_Files'
+        doc_counter = {}  # Dictionary to keep track of document counts
+
+        for document in classification_result.documents:
+            doc_type = document.doc_type.upper()
+            folder_path = os.path.join(base_path, doc_type)
+            os.makedirs(folder_path, exist_ok=True)
+
+            base_file_name = os.path.splitext(os.path.basename(self.original_pdf_path))[0]
+            doc_type_key = f"{base_file_name}_{doc_type}"
+            doc_counter[doc_type_key] = doc_counter.get(doc_type_key, 0) + 1
+
+            file_name = f"{base_file_name}_{doc_type}_{doc_counter[doc_type_key]}.pdf"
+            save_path = os.path.join(folder_path, file_name)
+
+            if not os.path.exists(save_path):
+                self.save_document_pages([region.page_number - 1 for region in document.bounding_regions], save_path)
+
+def process_directory(directory, classifier_id):
+    for file_name in os.listdir(directory):
+        if file_name.lower().endswith('.pdf'):
+            pdf_path = os.path.join(directory, file_name)
+            classifier = Classifier(classifier_id, pdf_path)
+            result = classifier.classify_and_extract_documents()
+            if result:
+                classifier.process_documents(result)
+            else:
+                print(f"No classification result for {file_name}")
+
+if __name__ == "__main__":
+    process_directory(r"C:\Users\ribhu.kaul\RibhuLLM\KID_Classifier\kid_uniti", "KidClassifierCorrected2")
+
+
+#########################################################################################################################
+
+-----> import request.py
+
+#################### This code works perfectly to reach out the KidClassifierCorrected2 method in Azure Doc Intel
+from azure.core.credentials import AzureKeyCredential
+# from azure.ai.formrecognizer import DocumentAnalysisClient
+# from azure.ai.formrecognizer import DocumentModelAdministrationClient
+# import requests
+# # Replace with your actual endpoint and key
+# endpoint = "https://diapplicativotest.cognitiveservices.azure.com/"
+# key = "7f56a184a6144306a71a71bd9e7b3c30"
+# credential = AzureKeyCredential(key)
+
+# # Replace with your custom model ID
+# model_id = "KidClassifierCorrected2"
+
+# # Local file path
+# file_path = "C://Users//ribhu.kaul//RibhuLLM//KID_Classifier//priipkid//priipkid_IE0004GRNWK7.pdf"
+
+# # Create a client
+# # document_analysis_client = DocumentAnalysisClient(endpoint=endpoint, credential=AzureKeyCredential(key))
+
+
+# # Construct the URL for the GET request
+# url = f"{endpoint}/documentintelligence/documentClassifiers/{model_id}?api-version=2024-02-29-preview"
+
+# # Set up the header with your API key
+# headers = {
+#     "Ocp-Apim-Subscription-Key": key
+# }
+
+# # Make the GET request
+# response = requests.get(url, headers=headers)
+
+# # Check if the request was successful
+# if response.status_code == 200:
+#     # Print classifier details
+#     classifier_details = response.json()
+#     print(classifier_details)
+# else:
+#     # Print error details
+#     print(f"Error: {response.status_code}")
+#     print(response.json())
+
+
+
+
+########################### The code given below is the 1st step in KID/KIID classification. This code uploads the document 
+# into the blob-container given in the Azure Document Intelligence
+import os
+import pandas as pd
+from azure.ai.documentintelligence import DocumentIntelligenceClient
+from azure.core.credentials import AzureKeyCredential
+from azure.ai.documentintelligence.models import ClassifyDocumentRequest
+from extractors.general_extractors.utils import format_pages_num
+
+
+from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
+
+def upload_file_to_blob(file_path, container_name, blob_name, connection_string):
+    try:
+        # Create a blob service client to interact with the blob storage
+        blob_service_client = BlobServiceClient.from_connection_string(connection_string)
+
+        # Get a client to interact with the specific container
+        container_client = blob_service_client.get_container_client(container_name)
+        
+        # Create the container if it does not exist
+        try:
+            container_client.create_container()
+            print(f"Container '{container_name}' created.")
+        except Exception as e:
+            print(f"Container '{container_name}' already exists or cannot be created: {str(e)}")
+
+        # Get a blob client using the local file name as the name for the blob
+        blob_client = blob_service_client.get_blob_client(container=container_name, blob=blob_name)
+
+        # Upload the file
+        with open(file_path, "rb") as data:
+            blob_client.upload_blob(data, overwrite=True)
+            print(f"File {file_path} uploaded to {container_name}/{blob_name}")
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+
+# Variables for the upload
+connection_string = "DefaultEndpointsProtocol=https;AccountName=kidseparatorstorage;AccountKey=Cdt0FZ4tkV6OMVKENHBzn90uWEqa3cVP9s87Wc3PWZx02NYqf076RHyFPhDKmDkN2rlkOCiBTdYF+AStOyuzQA==;EndpointSuffix=core.windows.net"
+container_name = "kidseparator"
+file_path = r'C:\Users\ribhu.kaul\RibhuLLM\KID_Classifier\priipkid\priipkid_IT0000380649_PAC2X.pdf'
+blob_name = "RibhuClassifier/priipkid_IT0000380649_PAC2X"
+
+# Upload the file
+upload_file_to_blob(file_path, container_name, blob_name, connection_string)
+
+
+##############################################################################################
+
+-------------> classifier.py
+
+from azure.core.credentials import AzureKeyCredential
+from azure.ai.documentintelligence import DocumentIntelligenceClient
+from azure.storage.blob import generate_blob_sas, BlobSasPermissions
+from datetime import datetime, timedelta
+from azure.ai.documentintelligence.models import SplitMode
+import os
+from PyPDF2 import PdfWriter, PdfReader
+
+
+
+# Generate SAS Token for the blob
+def generate_sas_url():
+    account_name = 'kidseparatorstorage'
+    account_key = 'Cdt0FZ4tkV6OMVKENHBzn90uWEqa3cVP9s87Wc3PWZx02NYqf076RHyFPhDKmDkN2rlkOCiBTdYF+AStOyuzQA=='
+    container_name = 'kidseparator'
+    blob_name = 'RibhuClassifier/priipkid_IT0000380649_PAC2X'
+    sas_token = generate_blob_sas(
+        account_name=account_name,
+        container_name=container_name,
+        blob_name=blob_name,
+        account_key=account_key,
+        permission=BlobSasPermissions(read=True),
+        expiry=datetime.utcnow() + timedelta(hours=1)  # Token valid for 1 hour
+    )
+    return f"https://{account_name}.blob.core.windows.net/{container_name}/{blob_name}?{sas_token}"
+
+
+#############################################################################
+# This code works perfectly, it takes the file from bolb container and classifies it into KID/KIID using custom classifier
+# from azure doc intelligence
+def save_document_pages(pdf_path, pages, save_path):
+    reader = PdfReader(pdf_path)
+    writer = PdfWriter()
+    
+    for page in pages:
+        writer.add_page(reader.pages[page - 1])  # Adjusting for 0-based indexing of the reader.pages list
+
+    with open(save_path, 'wb') as f:
+        writer.write(f)
+    print(f"Saved document to {save_path}")
+
+
+def process_documents(documents, original_pdf_path):
+    base_path = r'C:\Users\ribhu.kaul\RibhuLLM\KID_Classifier\Separated_Files'
+    
+    for idx, document in enumerate(documents):
+        doc_type = document.doc_type.upper()  # 'doc_type' attribute used from the actual API response
+        folder_path = os.path.join(base_path, doc_type)
+        os.makedirs(folder_path, exist_ok=True)
+        
+        file_name = f"Document_{idx + 1}_{doc_type}.pdf"
+        save_path = os.path.join(folder_path, file_name)
+        
+        pages = [region.page_number - 1 for region in document.bounding_regions]
+        save_document_pages(original_pdf_path, pages, save_path)
+
+def classify_and_extract_documents(endpoint, key, classifier_id, document_url, original_pdf_path):
+    credential = AzureKeyCredential(key)
+    client = DocumentIntelligenceClient(endpoint=endpoint, credential=credential, api_version='2024-02-29-preview')
+
+    classify_request = {
+        "urlSource": document_url
+    }
+
+    try:
+        poller = client.begin_classify_document(
+            classifier_id=classifier_id,
+            classify_request=classify_request,  
+            split="auto",
+            content_type="application/json"
+        )
+        result = poller.result()
+
+        if result.documents:
+            process_documents(result.documents, original_pdf_path)
+        else:
+            print("No documents found in response:", result)
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+
+# Example usage
+endpoint = "https://diapplicativotest.cognitiveservices.azure.com/"
+key = "7f56a184a6144306a71a71bd9e7b3c30"
+classifier_id = "KidClassifierCorrected2"
+document_url = generate_sas_url()
+original_pdf_path = r'C:\Users\ribhu.kaul\RibhuLLM\KID_Classifier\priipkid\priipkid_IT0000380649_PAC2X.pdf'
+
+
+  
+
+classify_and_extract_documents(endpoint, key, classifier_id, document_url, original_pdf_path)
+
+
+
+
+
+

@@ -1,0 +1,13 @@
+INSURANCE
+kid -> files
+gkid -> files
+
+BOND
+bloombergscreenshot -> folders/files
+prospetti -> files
+
+FONDI
+peergroup -> files
+
+DERIVATI
+complessità -> fiels

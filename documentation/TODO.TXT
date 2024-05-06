@@ -1,0 +1,29 @@
+Ho aggiunto due variabili per la lambda “ARN_SECRET_MANAGER_PREFIX = […]dde/{env}/“ e 
+“ARN_SECRET_MANAGER_SUFFIX =-llm-secret-key“, 
+in questo modo a livello applicativo rimane solo da costruirsi l’arn del segreto come 
+“ARN_SECRET_MANAGER_PREFIX{cliente}ARN_SECRET_MANAGER_SUFFIX”
+
+
+
+-- DOKER
+LISTA CONTAINERS ATTIVI
+docker ps
+
+KILL CONTAINER
+docker kill containercode
+
+BUILD IMAGE
+docker build --platform linux/arm64 -t basefunction:latest . -f dde.dockerfile
+
+--DOKER RUN 
+docker run --platform linux/arm64 -p 9000:8080 basefunction:latest
+--FROM DOCKER TO AWS--
+ -- tag image so it can be pushed to the directory
+docker tag basefunction:latest 649193829714.dkr.ecr.eu-west-1.amazonaws.com/dasextractor:latest
+-- RUN 3 SESSION, KEY E SECRET
+-- AUTH
+aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 649193829714.dkr.ecr.eu-west-1.amazonaws.com
+-- PUSH SU ECR
+docker push 649193829714.dkr.ecr.eu-west-1.amazonaws.com/dasextractor:latest
+--THEN JUST DEPLOY THE IMAGE IN THE LAMBDA
+
