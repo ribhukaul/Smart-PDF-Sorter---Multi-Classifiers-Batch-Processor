@@ -1,0 +1,79 @@
+{
+	"general": {
+		"LANGCHAIN_TRACING_V2": "true",
+		"LANGCHAIN_ENDPOINT": "https://api.smith.langchain.com",
+		"AZURE_OPENAI_API_VERSION": "2023-12-01-preview"
+	},
+	"waminsurance": {
+		"LANGCHAIN_PROJECT": "insurance",
+		"AZURE_FORM_RECOGNIZER_ENPOINT": "https://assicurativikidanalysis.cognitiveservices.azure.com/",
+		"AZURE_OPENAI_ENDPOINT": "https://insurancekidapplicativo.openai.azure.com/",
+		"AZURE_OPENAI_GPT35_DEP_NAME": "insurancegpt35",
+		"AZURE_OPENAI_GPT35_16K_DEP_NAME": "insurancegpt3516k",
+		"AZURE_OPENAI_GPT4_DEP_NAME": "insurancegpt4",
+		"AZURE_OPENAI_GPT4_TURBO_DEP_NAME": "insurancegpt4turbo",
+		"AZURE_OPENAI_EMBEDDING_DEP_NAME": "insuranceembedding"
+	},
+	"wamderivati":{
+		"LANGCHAIN_PROJECT": "wamderivati",
+		"AZURE_FORM_RECOGNIZER_ENPOINT": "https://wamderivati-di.cognitiveservices.azure.com/",
+		"AZURE_OPENAI_ENDPOINT": "https://wamderivati-oai.openai.azure.com/",
+		"AZURE_OPENAI_GPT35_DEP_NAME": "wamderivatigpt35",
+		"AZURE_OPENAI_GPT35_16K_DEP_NAME": "wamderivatigpt3516k",
+		"AZURE_OPENAI_GPT4_DEP_NAME": "wamderivatigpt4",
+		"AZURE_OPENAI_GPT4_TURBO_DEP_NAME": "wamderivatigpt4turbo"
+	},
+	"wambond":{
+		"LANGCHAIN_PROJECT": "wambond",
+		"AZURE_FORM_RECOGNIZER_ENPOINT": "https://wambond-di.cognitiveservices.azure.com/",
+		"AZURE_OPENAI_ENDPOINT": "https://wamasset-oai.openai.azure.com/",
+		"AZURE_OPENAI_GPT35_DEP_NAME": "NOTNEEDEDFORNOW",
+		"AZURE_OPENAI_GPT35_16K_DEP_NAME": "NOTNEEDEDFORNOW",
+		"AZURE_OPENAI_GPT4_DEP_NAME": "NOTNEEDEDFORNOW",
+		"AZURE_OPENAI_GPT4_TURBO_DEP_NAME": "NOTNEEDEDFORNOW"
+	},
+	"wamfondi":{
+		"LANGCHAIN_PROJECT": "NOTNEEDEDFORNOW",
+		"AZURE_FORM_RECOGNIZER_ENPOINT": "NOTNEEDEDFORNOW",
+		"AZURE_OPENAI_ENDPOINT": "NOTNEEDEDFORNOW",
+		"AZURE_OPENAI_GPT35_DEP_NAME": "NOTNEEDEDFORNOW",
+		"AZURE_OPENAI_GPT35_16K_DEP_NAME": "NOTNEEDEDFORNOW",
+		"AZURE_OPENAI_GPT4_DEP_NAME": "NOTNEEDEDFORNOW",
+		"AZURE_OPENAI_GPT4_TURBO_DEP_NAME": "NOTNEEDEDFORNOW"
+	},
+	"wamasset":{
+		"LANGCHAIN_PROJECT": "wamasset",
+		"AZURE_FORM_RECOGNIZER_ENPOINT": "https://wamasset-di.cognitiveservices.azure.com/",
+		"AZURE_OPENAI_ENDPOINT": "https://wamasset-oai.openai.azure.com/",
+		"AZURE_OPENAI_GPT35_DEP_NAME": "wamassetgpt35",
+		"AZURE_OPENAI_GPT35_16K_DEP_NAME": "wamassetgpt3516k",
+		"AZURE_OPENAI_GPT4_DEP_NAME": "wamassetgpt4",
+		"AZURE_OPENAI_GPT4_TURBO_DEP_NAME": "wamassetgpt4turbo"
+	},
+	"sim":{
+
+	},
+	"aws_configs": {
+		"REGION": "eu-south-1",
+		"SECRET_MANAGER_PREFIX": "dde/dev/",
+		"SECRET_MANAGER_SUFFIX": "-llm-secret",
+		"S3_BUCKET": "dde-dev-working-671256662822-eu-south-1",
+		"AWS_PROFILE": "appicativo"
+	},
+	"local": {
+		"LANGCHAIN_TRACING_V2": "true",
+		"LANGCHAIN_PROJECT": "local",
+		"AZURE_FORM_RECOGNIZER_ENPOINT": "https://diapplicativotest.cognitiveservices.azure.com/",
+		"AZURE_OPENAI_ENDPOINT": "https://applicativotest.openai.azure.com/",
+		"AZURE_OPENAI_GPT35_DEP_NAME": "testinggpt35",
+		"AZURE_OPENAI_GPT35_16K_DEP_NAME": "testinggpt3516k",
+		"AZURE_OPENAI_GPT4_DEP_NAME": "testinggpt4",
+		"AZURE_OPENAI_GPT4_TURBO_DEP_NAME": "testinggpt4turbo",
+		"AZURE_OPENAI_EMBEDDING_DEP_NAME": "testingembedding"
+	},
+	"api_keys": {
+        "AZURE_FORM_RECOGNIZER_KEY": "7f56a184a6144306a71a71bd9e7b3c30",
+        "LANGCHAIN_API_KEY": "ls__13aee9398b5d4a19962a24ef6568e5d5",
+        "AZURE_OPENAI_API_KEY": "09bfe288c4954f53aed3810393418834"
+    }
+}
