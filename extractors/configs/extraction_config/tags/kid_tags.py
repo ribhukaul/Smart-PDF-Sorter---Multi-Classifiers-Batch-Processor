@@ -5,7 +5,12 @@ This file contains the tags used to extract the data from the KID and GKID docum
 from typing import List
 
 from pydantic import BaseModel, Field
-from pydantic.fields import Optional
+#from pydantic.fields import Optional  # This is what creates the 1st error
+from typing import Optional
+
+
+# Your other imports and code
+
 
 NF = "not found"
 NA = "N/A"

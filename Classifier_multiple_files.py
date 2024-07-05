@@ -216,30 +216,40 @@ def extract_company_name(text, company_schema, file_id):
     raw_extraction = Models.tag(text, pydantic_class, file_id)
     return raw_extraction
 
-def process_file(classifier_id, pdf_path):
-    classifier = Classifier_N_File_Saver(classifier_id, pdf_path)
-    result = classifier.classify_and_extract_documents()
-    # Debug print to inspect result
-    # print(f"Result in process_file: {result}")
-    if result:
-        classifier.process_and_save_documents(result.documents)  # Ensure only documents are passed
-    return pdf_path
 
 
-def process_directory(directory, classifier_id, max_workers=5):
-    """Process all PDF files in a directory concurrently."""
-    with ThreadPoolExecutor(max_workers=max_workers) as executor:
-        futures = []
-        for file_name in os.listdir(directory):
-            if file_name.lower().endswith('.pdf'):
-                pdf_path = os.path.join(directory, file_name)
-                futures.append(executor.submit(process_file, classifier_id, pdf_path))
+
+t_path = r"C:\Users\ribhu.kaul\RibhuLLM\PageFinder\1ARCA\arca\arca_18.pdf"
+t =utils.get_document_text(t_path)
+t1 = [t[0], t[1]]
+
+t1_object = extract_company_name(t1, company_schema=company_schema, file_id=file_id)
+t1_name = t1_object.company_name if hasattr(t1_object, 'company_name') else 'DefaultCompanyName'
+
+# def process_file(classifier_id, pdf_path):
+#     classifier = Classifier_N_File_Saver(classifier_id, pdf_path)
+#     result = classifier.classify_and_extract_documents()
+#     # Debug print to inspect result
+#     # print(f"Result in process_file: {result}")
+#     if result:
+#         classifier.process_and_save_documents(result.documents)  # Ensure only documents are passed
+#     return pdf_path
+
+
+# def process_directory(directory, classifier_id, max_workers=5):
+#     """Process all PDF files in a directory concurrently."""
+#     with ThreadPoolExecutor(max_workers=max_workers) as executor:
+#         futures = []
+#         for file_name in os.listdir(directory):
+#             if file_name.lower().endswith('.pdf'):
+#                 pdf_path = os.path.join(directory, file_name)
+#                 futures.append(executor.submit(process_file, classifier_id, pdf_path))
         
-        for future in as_completed(futures):
-            result = future.result()
-            if result:
-                print(f"Processed and classified {result}")
+#         for future in as_completed(futures):
+#             result = future.result()
+#             if result:
+#                 print(f"Processed and classified {result}")
 
-if __name__ == "__main__":
-    process_directory(input_path[1], classifier[1])  # Select the input path for the folder containing the files 
-                                                     # to be classified and the classifier to be used
+# if __name__ == "__main__":
+#     process_directory(input_path[1], classifier[1])  # Select the input path for the folder containing the files 
+#                                                      # to be classified and the classifier to be used
