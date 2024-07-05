@@ -72,8 +72,8 @@
 		"AZURE_OPENAI_EMBEDDING_DEP_NAME": "testingembedding"
 	},
 	"api_keys": {
-        "AZURE_FORM_RECOGNIZER_KEY": "7f56a184a6144306a71a71bd9e7b3c30",
-        "LANGCHAIN_API_KEY": "ls__13aee9398b5d4a19962a24ef6568e5d5",
-        "AZURE_OPENAI_API_KEY": "09bfe288c4954f53aed3810393418834"
+        "AZURE_FORM_RECOGNIZER_KEY": "KEY1",
+        "LANGCHAIN_API_KEY": "KEY2",
+        "AZURE_OPENAI_API_KEY": "key3"
     }
 }
